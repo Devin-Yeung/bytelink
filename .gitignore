@@ -1,1 +1,7 @@
 /target
+
+# jetbrains
+.idea
+
+# macos
+.DS_Store
