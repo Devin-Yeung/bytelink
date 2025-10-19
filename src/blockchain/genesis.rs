@@ -31,7 +31,7 @@ impl Genesis {
 
 #[cfg(test)]
 mod tests {
-    use crate::genesis::Genesis;
+    use crate::blockchain::genesis::Genesis;
 
     #[test]
     fn load_genesis() {
