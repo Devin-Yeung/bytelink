@@ -9,6 +9,12 @@ use std::ops::Deref;
 #[repr(transparent)]
 pub struct AccountId(Address);
 
+impl From<Address> for AccountId {
+    fn from(address: Address) -> Self {
+        AccountId(address)
+    }
+}
+
 impl Deref for AccountId {
     type Target = Address;
 

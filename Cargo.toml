@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 alloy-core = { version = "1.4.1", features = ["serde"] }
-alloy-primitives = "1.4.1"
+alloy-primitives = { version = "1.4.1", features = ["k256"] }
 alloy-rlp = { version = "0.3.12", features = ["derive"] }
 alloy-signer = "1.0.41"
 alloy-signer-local = "1.0.41"

@@ -1,29 +1,9 @@
-use crate::crypto::eip191::eip191_hash;
-use alloy_primitives::B256;
+use crate::blockchain::database::account::AccountId;
 use alloy_primitives::U256;
 use anyhow::Result;
 
-pub trait SignerSync {
-    /// Signs the given hash.
-    fn sign_hash_sync(&self, hash: &B256) -> alloy_signer::Result<alloy_primitives::Signature>;
-
-    /// Signs the given message bytes using [EIP-191](https://eips.ethereum.org/EIPS/eip-191)
-    /// where the message is prefixed with [`EIP191_PREFIX`][crate::crypto::constant::EIP191_PREFIX].
-    fn eip191_sign_msg(&self, msg: &[u8]) -> Result<(B256, Signature)> {
-        let digest = eip191_hash(msg);
-        let signature = self.sign_hash_sync(&digest)?;
-        Ok((digest, Signature(signature)))
-    }
-}
-
-impl<T: alloy_signer::SignerSync> SignerSync for T {
-    fn sign_hash_sync(&self, hash: &B256) -> alloy_signer::Result<alloy_primitives::Signature> {
-        self.sign_hash_sync(hash)
-    }
-}
-
 #[repr(transparent)]
-pub struct Signature(alloy_primitives::Signature);
+pub struct Signature(pub(crate) alloy_primitives::Signature);
 
 impl Signature {
     pub fn r(&self) -> U256 {
@@ -43,5 +23,31 @@ impl Signature {
     /// which is `{0, 1} + 27` depending on the parity of the y-coordinate of the recovery point.
     pub fn as_bytes(&self) -> [u8; 65] {
         self.0.as_bytes()
+    }
+
+    /// Recover the address from the payload message that use [EIP-191](https://eips.ethereum.org/EIPS/eip-191) formatting.
+    /// Where the prefix is the bytelink specific [`EIP191_PREFIX`][crate::crypto::constant::EIP191_PREFIX].
+    pub fn recover_address_from_msg(&self, msg: &[u8]) -> Result<AccountId> {
+        let digest = crate::crypto::eip191::eip191_hash(msg);
+        let address = self.0.recover_address_from_prehash(&digest)?;
+        Ok(address.into())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::crypto::signer::{Signer, SignerSync};
+
+    #[test]
+    fn sign_and_recover() {
+        let signer = Signer::random();
+        let message = b"Hello, Bytelink!";
+
+        let signature = signer.eip191_sign_msg(message).unwrap();
+
+        let recovered_address = signature.recover_address_from_msg(message).unwrap();
+        let signer_address = signer.address();
+
+        assert_eq!(recovered_address, signer_address);
     }
 }
