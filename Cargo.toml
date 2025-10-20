@@ -5,8 +5,12 @@ edition = "2024"
 
 [dependencies]
 alloy-core = { version = "1.4.1", features = ["serde"] }
+alloy-primitives = "1.4.1"
+alloy-signer = "1.0.41"
+alloy-signer-local = "1.0.41"
 anyhow = "1.0.100"
 insta = { version = "1.43.2", features = ["json"] }
+itoa = "1.0.15"
 jiff = { version = "0.2.15", features = ["serde"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
