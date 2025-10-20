@@ -1,48 +1,24 @@
-use crate::crypto::constant::EIP191_PREFIX;
+use crate::crypto::eip191::eip191_hash;
 use alloy_primitives::B256;
 use alloy_primitives::U256;
-use alloy_primitives::utils::keccak256;
-use alloy_signer::SignerSync;
-use alloy_signer_local::PrivateKeySigner;
 use anyhow::Result;
 
-#[repr(transparent)]
-pub struct Signer(PrivateKeySigner);
+pub trait SignerSync {
+    /// Signs the given hash.
+    fn sign_hash_sync(&self, hash: &B256) -> alloy_signer::Result<alloy_primitives::Signature>;
 
-impl Signer {
-    /// Sign the given message bytes using [EIP-191](https://eips.ethereum.org/EIPS/eip-191)
+    /// Signs the given message bytes using [EIP-191](https://eips.ethereum.org/EIPS/eip-191)
     /// where the message is prefixed with [`EIP191_PREFIX`][crate::crypto::constant::EIP191_PREFIX].
-    pub fn sign(&self, msg: &[u8]) -> Result<Signature> {
-        let msg = Self::eip191_hash(msg);
-        let sig = self.0.sign_hash_sync(&msg)?;
-        Ok(Signature(sig))
+    fn eip191_sign_msg(&self, msg: &[u8]) -> Result<(B256, Signature)> {
+        let digest = eip191_hash(msg);
+        let signature = self.sign_hash_sync(&digest)?;
+        Ok((digest, Signature(signature)))
     }
+}
 
-    /// Create an [EIP-191](https://eips.ethereum.org/EIPS/eip-191) formatted message from the given byte slice.
-    /// ```text
-    /// ┌────────────────────────────────┬───────────┬───────────┐
-    /// │ \x19Bytelink Signed Message:\n │ len(msg)  │  payload  │
-    /// └────────────────────────────────┴───────────┴───────────┘
-    /// ```
-    fn eip191_message<T: AsRef<[u8]>>(message: T) -> Vec<u8> {
-        fn eip191_message(message: &[u8]) -> Vec<u8> {
-            let len = message.len();
-            let mut len_string_buffer = itoa::Buffer::new();
-            let len_string = len_string_buffer.format(len);
-
-            let mut eth_message = Vec::with_capacity(EIP191_PREFIX.len() + len_string.len() + len);
-            eth_message.extend_from_slice(EIP191_PREFIX.as_bytes());
-            eth_message.extend_from_slice(len_string.as_bytes());
-            eth_message.extend_from_slice(message);
-            eth_message
-        }
-
-        eip191_message(message.as_ref())
-    }
-
-    /// Create a Keccak-256 hash of an [EIP-191](https://eips.ethereum.org/EIPS/eip-191) formatted message.
-    fn eip191_hash<T: AsRef<[u8]>>(message: T) -> B256 {
-        keccak256(Self::eip191_message(message))
+impl<T: alloy_signer::SignerSync> SignerSync for T {
+    fn sign_hash_sync(&self, hash: &B256) -> alloy_signer::Result<alloy_primitives::Signature> {
+        self.sign_hash_sync(hash)
     }
 }
 
@@ -60,5 +36,12 @@ impl Signature {
 
     pub fn v(&self) -> bool {
         self.0.v()
+    }
+
+    /// Serialize the signature into a 65-byte array `[r (32 bytes) | s (32 bytes) | v (1 byte)]`.
+    /// where `v` follows the legacy format of [EIP-155](https://eips.ethereum.org/EIPS/eip-155)
+    /// which is `{0, 1} + 27` depending on the parity of the y-coordinate of the recovery point.
+    pub fn as_bytes(&self) -> [u8; 65] {
+        self.0.as_bytes()
     }
 }
