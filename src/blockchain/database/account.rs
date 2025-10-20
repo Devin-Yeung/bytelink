@@ -1,6 +1,4 @@
 use alloy_core::primitives::Address;
-use alloy_primitives::bytes::BufMut;
-use alloy_rlp::{Decodable, Encodable};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::ops::Deref;
@@ -23,19 +21,6 @@ impl Deref for AccountId {
     }
 }
 
-impl Encodable for AccountId {
-    fn encode(&self, out: &mut dyn BufMut) {
-        self.0.encode(out)
-    }
-}
-
-impl Decodable for AccountId {
-    fn decode(buf: &mut &[u8]) -> alloy_rlp::Result<Self> {
-        let address = Address::decode(buf)?;
-        Ok(AccountId(address))
-    }
-}
-
 impl AccountId {
     /// Parses a checksummed ethereum address string ([EIP-55](https://eips.ethereum.org/EIPS/eip-55))
     /// that must start with "0x" into an AccountId regardless of chain id.
@@ -48,18 +33,6 @@ impl AccountId {
 #[cfg(test)]
 mod tests {
     use crate::blockchain::database::account::AccountId;
-    use alloy_rlp::Decodable;
-
-    #[test]
-    fn rlp_identity() {
-        let account =
-            AccountId::parse_checksummed("0xF01813E4B85e178A83e29B8E7bF26BD830a25f32").unwrap();
-
-        let encoded = alloy_rlp::encode(&account);
-        let decoded: AccountId = AccountId::decode(&mut encoded.as_slice()).unwrap();
-
-        assert_eq!(account, decoded);
-    }
 
     #[test]
     fn valid_checksummed_address() {
