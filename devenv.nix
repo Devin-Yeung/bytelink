@@ -42,7 +42,12 @@
     hooks = {
       rustfmt.enable = true;
       nixfmt.enable = true;
-      yamlfmt.enable = true;
+      yamlfmt = {
+        enable = true;
+        settings = {
+          lint-only = false;
+        };
+      };
     };
     package = pkgs.prek;
   };
