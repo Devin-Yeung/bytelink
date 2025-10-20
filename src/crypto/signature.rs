@@ -15,7 +15,7 @@ impl Signer {
     pub fn sign(&self, msg: &[u8]) -> Result<Signature> {
         let msg = Self::eip191_hash(msg);
         let sig = self.0.sign_hash_sync(&msg)?;
-        Ok(sig.into())
+        Ok(Signature(sig))
     }
 
     /// Create an [EIP-191](https://eips.ethereum.org/EIPS/eip-191) formatted message from the given byte slice.
@@ -60,11 +60,5 @@ impl Signature {
 
     pub fn v(&self) -> bool {
         self.0.v()
-    }
-}
-
-impl From<alloy_primitives::Signature> for Signature {
-    fn from(value: alloy_primitives::Signature) -> Self {
-        Signature(value)
     }
 }
