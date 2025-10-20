@@ -1,13 +1,17 @@
 use crate::blockchain::database::account::AccountId;
+use alloy_rlp::{RlpDecodable, RlpEncodable};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, RlpEncodable, RlpDecodable)]
 pub struct Transaction {
-    chain_id: u16,
+    /// nonce of sender
     nonce: u64,
-    from_id: AccountId,
-    to_id: AccountId,
+    /// recipient address
+    to: AccountId,
+    /// total amount of transaction to be sent
     value: u64,
+    /// merge gas_limit and gas_price into tip
     tip: u64,
+    /// data payload
     data: Vec<u8>,
 }

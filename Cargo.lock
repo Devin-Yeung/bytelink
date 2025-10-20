@@ -764,6 +764,7 @@ version = "0.1.0"
 dependencies = [
  "alloy-core",
  "alloy-primitives",
+ "alloy-rlp",
  "alloy-signer",
  "alloy-signer-local",
  "anyhow",
