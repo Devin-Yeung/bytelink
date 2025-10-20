@@ -8,17 +8,33 @@
 
 {
   # https://devenv.sh/packages/
-  packages = [ pkgs.lazygit ];
+  packages = with pkgs; [
+    rustup
+    lazygit
+  ];
 
   # https://devenv.sh/languages/
   languages = {
-    rust.enable = true;
+    rust = {
+      channel = "stable";
+      components = [
+        "rustc"
+        "cargo"
+        "clippy"
+        "rustfmt"
+        "rust-analyzer"
+        "rust-src"
+      ];
+      enable = true;
+    };
     nix.enable = true;
   };
 
+  # https://github.com/cachix/devenv/issues/1369
   enterShell = ''
     rustc --version
     cargo --version
+    echo "RUST_SRC_PATH => $RUST_SRC_PATH"
   '';
 
   # https://devenv.sh/git-hooks/
