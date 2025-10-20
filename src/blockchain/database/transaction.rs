@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::blockchain::database::account::AccountId;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Transaction {

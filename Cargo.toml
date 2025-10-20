@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+alloy-core = { version = "1.4.1", features = ["serde"] }
 anyhow = "1.0.100"
 insta = { version = "1.43.2", features = ["json"] }
 jiff = { version = "0.2.15", features = ["serde"] }
