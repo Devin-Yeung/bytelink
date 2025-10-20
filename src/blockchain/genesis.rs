@@ -1,8 +1,8 @@
+use anyhow::Result;
+use jiff::Timestamp;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::Path;
-use anyhow::Result;
-use jiff::Timestamp;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Genesis {
@@ -36,7 +36,8 @@ mod tests {
     #[test]
     fn load_genesis() {
         let genesis = Genesis::load("assets/genesis.json").unwrap();
-        insta::assert_json_snapshot!(genesis);
+        insta::with_settings!({sort_maps => true}, {
+                insta::assert_json_snapshot!(genesis);
+        });
     }
-
 }
