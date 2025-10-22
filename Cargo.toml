@@ -9,6 +9,7 @@ alloy-primitives = { version = "1.4.1", features = ["k256"] }
 alloy-signer = "1.0.41"
 alloy-signer-local = "1.0.41"
 anyhow = "1.0.100"
+dashmap = "6.1.0"
 insta = { version = "1.43.2", features = ["json"] }
 itoa = "1.0.15"
 jiff = { version = "0.2.15", features = ["serde"] }
