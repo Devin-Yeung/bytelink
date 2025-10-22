@@ -1,4 +1,4 @@
-use crate::blockchain::database::account::AccountId;
+use crate::blockchain::database::account::Address;
 use crate::crypto::eip191::eip191_hash;
 use crate::crypto::signature::Signature;
 use alloy_primitives::B256;
@@ -37,8 +37,8 @@ impl Signer {
         Self(alloy_signer_local::PrivateKeySigner::random())
     }
 
-    pub fn address(&self) -> AccountId {
+    pub fn address(&self) -> Address {
         let address = self.0.address();
-        AccountId::from(address)
+        Address::from(address)
     }
 }

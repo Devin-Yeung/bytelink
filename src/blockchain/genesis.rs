@@ -18,7 +18,7 @@ pub struct Genesis {
     /// The price of gas for executing transactions.
     gas_price: u64,
     /// A mapping of account addresses to their initial balances.
-    balances: HashMap<String, u64>,
+    pub(crate) balances: HashMap<String, u64>,
 }
 
 impl Genesis {

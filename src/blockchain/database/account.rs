@@ -1,49 +1,53 @@
-use alloy_core::primitives::Address;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
-use std::ops::Deref;
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Hash)]
 #[repr(transparent)]
-pub struct AccountId(Address);
+pub struct Address(alloy_primitives::Address);
 
-impl From<Address> for AccountId {
-    fn from(address: Address) -> Self {
-        AccountId(address)
+impl From<alloy_primitives::Address> for Address {
+    fn from(addr: alloy_primitives::Address) -> Self {
+        Address(addr)
     }
 }
 
-impl Deref for AccountId {
-    type Target = Address;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl AccountId {
+impl Address {
     /// Parses a checksummed ethereum address string ([EIP-55](https://eips.ethereum.org/EIPS/eip-55))
     /// that must start with "0x" into an AccountId regardless of chain id.
     pub fn parse_checksummed<S: AsRef<str>>(hex: S) -> Result<Self> {
-        let inner = Address::parse_checksummed(hex, None)?;
-        Ok(AccountId(inner))
+        let inner = alloy_primitives::Address::parse_checksummed(hex, None)?;
+        Ok(Address(inner))
+    }
+}
+
+pub struct Account {
+    address: Address,
+    nonce: u64,
+    balance: u64,
+}
+
+impl Account {
+    pub fn new(address: Address, balance: u64) -> Self {
+        Account {
+            address,
+            nonce: 0,
+            balance,
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::blockchain::database::account::AccountId;
+    use crate::blockchain::database::account::Address;
 
     #[test]
     fn valid_checksummed_address() {
-        AccountId::parse_checksummed("0xF01813E4B85e178A83e29B8E7bF26BD830a25f32").unwrap();
+        Address::parse_checksummed("0xF01813E4B85e178A83e29B8E7bF26BD830a25f32").unwrap();
     }
 
     #[test]
     fn invalid_checksummed_address() {
         // lowercase the first character (F -> f)
-        assert!(
-            AccountId::parse_checksummed("0xf01813e4b85e178a83e29b8e7bf26bd830a25f32").is_err()
-        );
+        assert!(Address::parse_checksummed("0xf01813e4b85e178a83e29b8e7bf26bd830a25f32").is_err());
     }
 }

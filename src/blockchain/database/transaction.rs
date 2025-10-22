@@ -1,7 +1,8 @@
-use crate::blockchain::database::account::AccountId;
+use crate::blockchain::database::account::Address;
 use crate::crypto::signature::Signature;
 use crate::crypto::signer::SignerSync;
 use anyhow::Result;
+use jiff::Timestamp;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -9,9 +10,9 @@ pub struct Transaction {
     /// nonce of sender
     nonce: u64,
     /// sender address
-    from: AccountId, // TODO: consider removing 'from' field to save space, as it can be derived from the signature
+    from: Address, // TODO: consider removing 'from' field to save space, as it can be derived from the signature
     /// recipient address
-    to: AccountId,
+    to: Address,
     /// total amount of transaction to be sent
     value: u64,
     /// rewards for processing the transaction
@@ -53,6 +54,13 @@ impl SignedTx {
 
         Ok(())
     }
+}
+
+pub struct BlockTx {
+    tx: SignedTx,
+    timestamp: u64,
+    gas_price: u64,
+    gas_units: u64,
 }
 
 #[cfg(test)]

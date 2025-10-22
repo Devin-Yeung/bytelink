@@ -1,4 +1,4 @@
-use crate::blockchain::database::account::AccountId;
+use crate::blockchain::database::account::Address;
 use alloy_primitives::U256;
 use anyhow::Result;
 
@@ -27,7 +27,7 @@ impl Signature {
 
     /// Recover the address from the payload message that use [EIP-191](https://eips.ethereum.org/EIPS/eip-191) formatting.
     /// Where the prefix is the bytelink specific [`EIP191_PREFIX`][crate::crypto::constant::EIP191_PREFIX].
-    pub fn recover_address_from_msg(&self, msg: &[u8]) -> Result<AccountId> {
+    pub fn recover_address_from_msg(&self, msg: &[u8]) -> Result<Address> {
         let digest = crate::crypto::eip191::eip191_hash(msg);
         let address = self.0.recover_address_from_prehash(&digest)?;
         Ok(address.into())
