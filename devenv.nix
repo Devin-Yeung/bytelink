@@ -41,7 +41,7 @@
   git-hooks = {
     hooks = {
       rustfmt.enable = true;
-      nixfmt.enable = true;
+      nixfmt-rfc-style.enable = true;
       yamlfmt = {
         enable = true;
         settings = {
