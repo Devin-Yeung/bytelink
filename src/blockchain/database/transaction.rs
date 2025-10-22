@@ -2,7 +2,6 @@ use crate::blockchain::database::account::Address;
 use crate::crypto::signature::Signature;
 use crate::crypto::signer::SignerSync;
 use anyhow::Result;
-use jiff::Timestamp;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

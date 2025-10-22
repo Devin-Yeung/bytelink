@@ -1,4 +1,5 @@
 use anyhow::Result;
+use k256::ecdsa::SigningKey;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Hash)]
@@ -17,6 +18,16 @@ impl Address {
     pub fn parse_checksummed<S: AsRef<str>>(hex: S) -> Result<Self> {
         let inner = alloy_primitives::Address::parse_checksummed(hex, None)?;
         Ok(Address(inner))
+    }
+
+    pub fn from_private_key(key: &SigningKey) -> Self {
+        let inner = alloy_primitives::Address::from_private_key(key);
+        Address(inner)
+    }
+
+    /// return the hex string representation of the checksummed address
+    pub fn checksummed(&self) -> String {
+        self.0.to_checksum(None)
     }
 }
 
