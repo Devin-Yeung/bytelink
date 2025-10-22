@@ -12,7 +12,7 @@ pub enum Command {
 
 #[derive(clap::Parser)]
 pub struct CreateOpts {
-    #[clap(long)]
-    /// Name of the wallet
-    pub name: String,
+    #[clap(long, short)]
+    /// Output file to save the wallet's private key
+    pub output: String,
 }

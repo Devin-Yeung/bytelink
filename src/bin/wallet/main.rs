@@ -1,14 +1,16 @@
 mod cli;
+mod cmd;
 mod wallet;
 
 use crate::cli::{Cli, Command};
-use crate::wallet::generate_wallet;
 use clap::Parser;
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.cmd {
-        Command::Create(opts) => generate_wallet(&opts),
+        Command::Create(opts) => cmd::generate_wallet(&opts)?,
     }
+
+    Ok(())
 }

@@ -789,6 +789,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dashmap",
+ "hex",
  "insta",
  "itoa",
  "jiff",

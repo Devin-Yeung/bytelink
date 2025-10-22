@@ -10,6 +10,7 @@ alloy-signer-local = "1.0.41"
 anyhow = "1.0.100"
 clap = { version = "4.5.50", features = ["derive"] }
 dashmap = "6.1.0"
+hex = "0.4.3"
 insta = { version = "1.43.2", features = ["json"] }
 itoa = "1.0.15"
 jiff = { version = "0.2.15", features = ["serde"] }
