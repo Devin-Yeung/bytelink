@@ -1,9 +1,9 @@
+use crate::cli::{Cli, Command};
+use clap::Parser;
+
 mod cli;
 mod cmd;
 mod wallet;
-
-use crate::cli::{Cli, Command};
-use clap::Parser;
 
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();

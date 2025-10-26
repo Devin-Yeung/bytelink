@@ -31,11 +31,11 @@ impl Genesis {
 
 #[cfg(test)]
 mod tests {
-    use crate::blockchain::genesis::Genesis;
+    use crate::genesis::Genesis;
 
     #[test]
     fn load_genesis() {
-        let genesis = Genesis::load("assets/genesis.json").unwrap();
+        let genesis = Genesis::load("../../assets/genesis.json").unwrap();
         insta::with_settings!({sort_maps => true}, {
                 insta::assert_json_snapshot!(genesis);
         });

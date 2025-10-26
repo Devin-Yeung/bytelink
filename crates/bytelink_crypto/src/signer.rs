@@ -1,6 +1,6 @@
-use crate::blockchain::database::account::Address;
-use crate::crypto::eip191::eip191_hash;
-use crate::crypto::signature::Signature;
+use crate::address::Address;
+use crate::eip191::eip191_hash;
+use crate::signature::Signature;
 use alloy_primitives::B256;
 use anyhow::Result;
 

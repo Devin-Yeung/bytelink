@@ -1,11 +1,9 @@
 mod fcfs;
 mod selector;
 
-use crate::blockchain::database::account::Address;
-use crate::blockchain::database::transaction::BlockTx;
-use crate::blockchain::mempool::fcfs::TimebasedSelector;
-use crate::blockchain::mempool::selector::{Selector, TxInfo};
+use crate::database::transaction::BlockTx;
 use anyhow::Result;
+use bytelink_crypto::address::Address;
 use dashmap::DashMap;
 
 /// A mempool is staging area for unconfirmed transactions in a blockchain.
@@ -22,6 +20,12 @@ pub struct Key {
 impl Key {
     pub fn new(sender: Address, nonce: u64) -> Self {
         Key { sender, nonce }
+    }
+}
+
+impl Default for MemPool {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

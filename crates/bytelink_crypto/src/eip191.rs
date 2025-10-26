@@ -1,4 +1,4 @@
-use crate::crypto::constant::EIP191_PREFIX;
+use crate::constant::EIP191_PREFIX;
 use alloy_primitives::{B256, keccak256};
 
 /// Create an [EIP-191](https://eips.ethereum.org/EIPS/eip-191) formatted message from the given byte slice.

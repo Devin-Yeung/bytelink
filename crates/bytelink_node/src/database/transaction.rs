@@ -1,8 +1,8 @@
-use crate::blockchain::database::account::Address;
-use crate::crypto::signature::Signature;
-use crate::crypto::signer::SignerSync;
 use anyhow::Result;
-use jiff::{Timestamp, Zoned};
+use bytelink_crypto::address::Address;
+use bytelink_crypto::signature::Signature;
+use bytelink_crypto::signer::SignerSync;
+use jiff::Timestamp;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -81,14 +81,15 @@ impl BlockTx {
 
 #[cfg(test)]
 mod tests {
-    use crate::crypto::signer::Signer;
+    use crate::database::transaction::Transaction;
+    use bytelink_crypto::signer::Signer;
 
     #[test]
     pub fn naive_valid_tx() {
         let alice = Signer::random();
         let bob = Signer::random();
 
-        let tx = crate::blockchain::database::transaction::Transaction {
+        let tx = Transaction {
             nonce: 0,
             from: alice.address(),
             to: bob.address(),
@@ -106,7 +107,7 @@ mod tests {
     pub fn send_to_self_invalid_tx() {
         let alice = Signer::random();
 
-        let tx = crate::blockchain::database::transaction::Transaction {
+        let tx = Transaction {
             nonce: 0,
             from: alice.address(),
             to: alice.address(),
@@ -126,7 +127,7 @@ mod tests {
         let bob = Signer::random();
         let charlie = Signer::random();
 
-        let tx = crate::blockchain::database::transaction::Transaction {
+        let tx = Transaction {
             nonce: 0,
             from: alice.address(),
             to: bob.address(),
