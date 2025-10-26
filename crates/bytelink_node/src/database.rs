@@ -1,6 +1,7 @@
-use crate::blockchain::database::account::{Account, Address};
-use crate::blockchain::genesis::Genesis;
+use crate::database::account::Account;
+use crate::genesis::Genesis;
 use anyhow::Result;
+use bytelink_crypto::address::Address;
 use dashmap::DashMap;
 use dashmap::mapref::one::Ref;
 

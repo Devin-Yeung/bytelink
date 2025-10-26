@@ -1,6 +1,7 @@
 ---
-source: src/blockchain/genesis.rs
+source: crates/bytelink_node/src/genesis.rs
 expression: genesis
+snapshot_kind: text
 ---
 {
   "date": "2021-12-17T00:00:00Z",

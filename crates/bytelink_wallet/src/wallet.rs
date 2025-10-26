@@ -1,5 +1,5 @@
 use anyhow::Result;
-use bytelink::blockchain::database::account::Address;
+use bytelink_crypto::address::Address;
 use k256::ecdsa::SigningKey;
 use k256::elliptic_curve::rand_core::OsRng;
 

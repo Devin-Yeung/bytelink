@@ -1,4 +1,5 @@
+pub mod address;
 pub mod constant;
-mod eip191;
+pub mod eip191;
 pub mod signature;
 pub mod signer;

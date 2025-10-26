@@ -1,7 +1,7 @@
-use crate::blockchain::database::Database;
-use crate::blockchain::database::account::Address;
-use crate::blockchain::genesis::Genesis;
+use crate::database::Database;
+use crate::genesis::Genesis;
 use anyhow::Result;
+use bytelink_crypto::address::Address;
 
 pub struct Config {
     beneficiary: Address,

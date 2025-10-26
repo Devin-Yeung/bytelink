@@ -1,7 +1,7 @@
+use alloy_signer::k256::ecdsa::SigningKey;
 use anyhow::Result;
-use k256::ecdsa::SigningKey;
 use serde::{Deserialize, Serialize};
-use std::fmt::{Formatter, Pointer};
+use std::fmt::Formatter;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Hash)]
 #[repr(transparent)]
@@ -32,22 +32,6 @@ impl Address {
     }
 }
 
-pub struct Account {
-    address: Address,
-    nonce: u64,
-    balance: u64,
-}
-
-impl Account {
-    pub fn new(address: Address, balance: u64) -> Self {
-        Account {
-            address,
-            nonce: 0,
-            balance,
-        }
-    }
-}
-
 /// Hex representation tests for Address
 impl std::fmt::LowerHex for Address {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -63,7 +47,7 @@ impl std::fmt::UpperHex for Address {
 
 #[cfg(test)]
 mod tests {
-    use crate::blockchain::database::account::Address;
+    use crate::address::Address;
 
     #[test]
     fn hex_repr() {

@@ -1,24 +1,15 @@
-[package]
-name = "bytelink"
+[workspace]
+members = [ "crates/*" ]
+resolver = "3"
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
+license = "MIT OR Apache-2.0"
 
-[dependencies]
-alloy-primitives = { version = "1.4.1", features = ["k256"] }
-alloy-signer = "1.0.41"
-alloy-signer-local = "1.0.41"
+[workspace.dependencies]
+bytelink_crypto = { path = "crates/bytelink_crypto" }
+
 anyhow = "1.0.100"
-clap = { version = "4.5.50", features = ["derive"] }
-dashmap = "6.1.0"
-hex = "0.4.3"
-insta = { version = "1.43.2", features = ["json"] }
-itoa = "1.0.15"
-jiff = { version = "0.2.15", features = ["serde"] }
-k256 = { version = "0.13.4", features = ["ecdsa", "ecdsa-core"] }
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.145"
-
-
-[[bin]]
-name = "wallet"
-path = "src/bin/wallet/main.rs"
+insta = { version = "1.43.2", features = ["json"] }

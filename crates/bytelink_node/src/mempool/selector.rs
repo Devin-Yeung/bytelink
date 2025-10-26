@@ -1,5 +1,5 @@
-use crate::blockchain::database::transaction::BlockTx;
-use crate::blockchain::mempool::Key;
+use crate::database::transaction::BlockTx;
+use crate::mempool::Key;
 use dashmap::mapref::multiple::RefMulti;
 
 /// A selector is responsible for selecting transactions from the mempool
