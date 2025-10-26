@@ -11,7 +11,7 @@ pub struct MemPool {
     pool: DashMap<Key, BlockTx>,
 }
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash, Clone)]
 pub struct Key {
     sender: Address,
     nonce: u64,
