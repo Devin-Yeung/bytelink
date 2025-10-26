@@ -6,20 +6,20 @@ use anyhow::Result;
 
 pub trait SignerSync {
     /// Signs the given hash.
-    fn sign_hash_sync(&self, hash: &B256) -> alloy_signer::Result<alloy_primitives::Signature>;
+    fn sign_hash_sync(&self, hash: &B256) -> Result<Signature>;
 
     /// Signs the given message bytes using [EIP-191](https://eips.ethereum.org/EIPS/eip-191)
     /// where the message is prefixed with the bytelink specific [`EIP191_PREFIX`][crate::crypto::constant::EIP191_PREFIX].
     fn eip191_sign_msg(&self, msg: &[u8]) -> Result<Signature> {
         let digest = eip191_hash(msg);
-        let signature = self.sign_hash_sync(&digest)?;
-        Ok(Signature(signature))
+        self.sign_hash_sync(&digest)
     }
 }
 
 impl<T: alloy_signer::SignerSync> SignerSync for T {
-    fn sign_hash_sync(&self, hash: &B256) -> alloy_signer::Result<alloy_primitives::Signature> {
-        self.sign_hash_sync(hash)
+    fn sign_hash_sync(&self, hash: &B256) -> Result<Signature> {
+        let sig = self.sign_hash_sync(hash)?;
+        Ok(Signature(sig))
     }
 }
 
@@ -27,7 +27,7 @@ impl<T: alloy_signer::SignerSync> SignerSync for T {
 pub struct Signer(alloy_signer_local::PrivateKeySigner);
 
 impl SignerSync for Signer {
-    fn sign_hash_sync(&self, hash: &B256) -> alloy_signer::Result<alloy_primitives::Signature> {
+    fn sign_hash_sync(&self, hash: &B256) -> Result<Signature> {
         self.0.sign_hash_sync(hash)
     }
 }
