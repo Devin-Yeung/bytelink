@@ -1,5 +1,6 @@
 use alloy_signer::k256::ecdsa::SigningKey;
 use anyhow::Result;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::fmt::Formatter;
 
@@ -14,6 +15,12 @@ impl From<alloy_primitives::Address> for Address {
 }
 
 impl Address {
+    pub fn random<R: Rng>(mut rng: R) -> Self {
+        let bytes: [u8; 20] = rng.random();
+        let inner = alloy_primitives::Address::from_slice(&bytes);
+        Address(inner)
+    }
+
     /// Parses a checksummed ethereum address string ([EIP-55](https://eips.ethereum.org/EIPS/eip-55))
     /// that must start with "0x" into an AccountId regardless of chain id.
     pub fn parse_checksummed<S: AsRef<str>>(hex: S) -> Result<Self> {
@@ -48,6 +55,7 @@ impl std::fmt::UpperHex for Address {
 #[cfg(test)]
 mod tests {
     use crate::address::Address;
+    use rand::rng;
 
     #[test]
     fn hex_repr() {
@@ -72,5 +80,12 @@ mod tests {
     fn invalid_checksummed_address() {
         // lowercase the first character (F -> f)
         assert!(Address::parse_checksummed("0xf01813e4b85e178a83e29b8e7bf26bd830a25f32").is_err());
+    }
+
+    #[test]
+    fn generate_random_address() {
+        let addr1 = Address::random(rng());
+        let addr2 = Address::random(rng());
+        assert_ne!(addr1, addr2);
     }
 }

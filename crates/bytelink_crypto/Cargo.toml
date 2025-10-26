@@ -6,6 +6,7 @@ edition.workspace = true
 [dependencies]
 anyhow = { workspace = true }
 serde = { workspace = true }
+rand = { workspace = true }
 
 alloy-primitives = { version = "1.4.1", features = ["k256"] }
 alloy-signer = "1.0.41"

@@ -788,6 +788,7 @@ dependencies = [
  "alloy-signer-local",
  "anyhow",
  "itoa",
+ "rand 0.9.2",
  "serde",
 ]
 
@@ -800,6 +801,7 @@ dependencies = [
  "dashmap",
  "insta",
  "jiff",
+ "rand 0.9.2",
  "serde",
  "serde_json",
 ]
