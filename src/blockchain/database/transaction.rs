@@ -2,22 +2,23 @@ use crate::blockchain::database::account::Address;
 use crate::crypto::signature::Signature;
 use crate::crypto::signer::SignerSync;
 use anyhow::Result;
+use jiff::{Timestamp, Zoned};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Transaction {
     /// nonce of sender
-    nonce: u64,
+    pub nonce: u64,
     /// sender address
-    from: Address, // TODO: consider removing 'from' field to save space, as it can be derived from the signature
+    pub from: Address, // TODO: consider removing 'from' field to save space, as it can be derived from the signature
     /// recipient address
-    to: Address,
+    pub to: Address,
     /// total amount of transaction to be sent
-    value: u64,
+    pub value: u64,
     /// rewards for processing the transaction
-    tip: u64,
+    pub tip: u64,
     /// data payload
-    data: Vec<u8>,
+    pub data: Vec<u8>,
 }
 
 impl Transaction {
@@ -33,7 +34,7 @@ impl Transaction {
 
 pub struct SignedTx {
     pub transaction: Transaction,
-    pub signature: Signature,
+    signature: Signature,
 }
 
 impl SignedTx {
@@ -55,16 +56,32 @@ impl SignedTx {
     }
 }
 
+/// Define how a transection looks like in a block
 pub struct BlockTx {
     tx: SignedTx,
-    timestamp: u64,
-    gas_price: u64,
-    gas_units: u64,
+    pub timestamp: u64,
+    pub gas_price: u64,
+    pub gas_units: u64,
+}
+
+impl BlockTx {
+    pub fn new(tx: SignedTx, gas_price: u64, gas_units: u64) -> Self {
+        BlockTx {
+            tx,
+            timestamp: Timestamp::now().as_millisecond() as u64,
+            gas_price,
+            gas_units,
+        }
+    }
+
+    pub fn tx(&self) -> &Transaction {
+        &self.tx.transaction
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::crypto::signer::{Signer, SignerSync};
+    use crate::crypto::signer::Signer;
 
     #[test]
     pub fn naive_valid_tx() {

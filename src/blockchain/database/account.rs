@@ -1,6 +1,7 @@
 use anyhow::Result;
 use k256::ecdsa::SigningKey;
 use serde::{Deserialize, Serialize};
+use std::fmt::{Formatter, Pointer};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Hash)]
 #[repr(transparent)]
@@ -47,9 +48,36 @@ impl Account {
     }
 }
 
+/// Hex representation tests for Address
+impl std::fmt::LowerHex for Address {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "0x{:x}", self.0)
+    }
+}
+
+impl std::fmt::UpperHex for Address {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "0x{:X}", self.0)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::blockchain::database::account::Address;
+
+    #[test]
+    fn hex_repr() {
+        let address =
+            Address::parse_checksummed("0xF01813E4B85e178A83e29B8E7bF26BD830a25f32").unwrap();
+        assert_eq!(
+            format!("{:x}", address),
+            "0xf01813e4b85e178a83e29b8e7bf26bd830a25f32"
+        );
+        assert_eq!(
+            format!("{:X}", address),
+            "0xF01813E4B85E178A83E29B8E7BF26BD830A25F32"
+        );
+    }
 
     #[test]
     fn valid_checksummed_address() {
