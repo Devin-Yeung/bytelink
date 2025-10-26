@@ -9,7 +9,7 @@ pub trait SignerSync {
     fn sign_hash_sync(&self, hash: &B256) -> Result<Signature>;
 
     /// Signs the given message bytes using [EIP-191](https://eips.ethereum.org/EIPS/eip-191)
-    /// where the message is prefixed with the bytelink specific [`EIP191_PREFIX`][crate::crypto::constant::EIP191_PREFIX].
+    /// where the message is prefixed with the bytelink specific [`EIP191_PREFIX`][crate::constant::EIP191_PREFIX].
     fn eip191_sign_msg(&self, msg: &[u8]) -> Result<Signature> {
         let digest = eip191_hash(msg);
         self.sign_hash_sync(&digest)
